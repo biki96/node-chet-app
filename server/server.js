@@ -26,18 +26,37 @@ io.on('connection', function (socket){ //.on slusamo dogadjaj (konekcije), socke
 
   socket.on('createMessage', (message) => {
     console.log(message);
+
+    socket.emit('newMessage', {
+      from: 'Admin',
+      text: 'Welcome to the chata app',
+      createdAt: new Date().getTime()      
+    });
+
+    socket.broadcast.emit('newMessage', {
+      from: 'Admin',
+      text: 'New user joined',
+      createdAt: new Date().getTime()
+    });
+
     io.emit('newMessage', {
       from: message.from,
       text: message.text,
       createdAd: new Date().getTime()
     });
+  //   socket.broadcast.emit('newMessage', {
+  //     from: message.from,
+  //     text: message.from,
+  //     createdAt: new Date().getTime()
+  //   }) // salje dogadjaj svima osim ovom soketu
   });
 
   socket.on('disconnect', function (){
     console.log('Client was disconnect');
   });
 
-})
-server.listen(port, () =>{
+});
+
+server.listen(port, () => {
   console.log(`Server is up on PORT ${port}`);
-})
+});
