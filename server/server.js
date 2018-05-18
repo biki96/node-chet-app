@@ -21,14 +21,16 @@ io.on('connection', function (socket){ //.on slusamo dogadjaj (konekcije), socke
     createdAt: 123
   });
 
-  socket.emit('newEmail', { //kreiranje dogadjaja
-    from: 'biki@example.com',
-    text: 'Some text',
-    createAt: 23
-  });
+//socket.emit - kreiranje dogadjaja
+//io.emit - vidljivo svim soketima
 
   socket.on('createMessage', (message) => {
     console.log(message);
+    io.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createdAd: new Date().getTime()
+    });
   });
 
   socket.on('disconnect', function (){
