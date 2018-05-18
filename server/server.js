@@ -12,10 +12,26 @@ var io = socketIO(server); //vraca web socket server, server-klijent komunikacij
 
 app.use(express.static(publicPath));
 
-io.on('connection', (socket) => { //.on slusamo dogadjaj (konekcije), socket-individualni soket
+io.on('connection', function (socket){ //.on slusamo dogadjaj (konekcije), socket-individualni soket
   console.log('New user connected');
   
-  socket.on('disconnect', () => {
+  socket.emit('newMessage', {
+    from: "Milos",
+    text: "hey",
+    createdAt: 123
+  });
+
+  socket.emit('newEmail', { //kreiranje dogadjaja
+    from: 'biki@example.com',
+    text: 'Some text',
+    createAt: 23
+  });
+
+  socket.on('createMessage', (message) => {
+    console.log(message);
+  });
+
+  socket.on('disconnect', function (){
     console.log('Client was disconnect');
   });
 
