@@ -15,29 +15,19 @@ app.use(express.static(publicPath));
 
 io.on('connection', function (socket){ //.on slusamo dogadjaj (konekcije), socket-individualni soket
   console.log('New user connected');
-  
-  socket.emit('newMessage', {
-    from: "Milos",
-    text: "hey",
-    createdAt: 123
-  });
 
 //socket.emit - kreiranje dogadjaja
 //io.emit - vidljivo svim soketima
 
-  socket.on('createMessage', (message) => {
+  socket.emit('newMessage', generateMessage('Admin', 'Welcome to chat app'));
+
+  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
+
+  socket.on('createMessage', (message, callback) => {
     console.log(message);
-
-    socket.emit('newMessage', generateMessage('Admin', 'Welcome to chat app'));
-
-    socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
-
     io.emit('newMessage', generateMessage(message.from, message.text));
-  //   socket.broadcast.emit('newMessage', {
-  //     from: message.from,
-  //     text: message.from,
-  //     createdAt: new Date().getTime()
-  //   }) // salje dogadjaj svima osim ovom soketu
+    callback('This is from the server');
+
   });
 
   socket.on('disconnect', function (){
